@@ -1,7 +1,8 @@
 package com.ay.mall.pojo;
 
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.Date;
 public class User {
     private Integer id;
 
