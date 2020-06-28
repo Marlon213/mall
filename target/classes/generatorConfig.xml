@@ -20,9 +20,9 @@
 
         <!--jdbc的数据库连接 -->
         <jdbcConnection
-                driverClass="${driver}"
+                driverClass="${driverName}"
                 connectionURL="${url}"
-                userId="${username}"
+                userId="${user}"
                 password="${password}">
         </jdbcConnection>
 
@@ -70,7 +70,7 @@
 
 
 
-        <table tableName="mall_user" domainObjectName="User" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="mall_category" domainObjectName="Category" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
 
 
         <!-- geelynote mybatis插件的搭建 -->
