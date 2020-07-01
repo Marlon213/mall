@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozermapper.github.io/schema/bean-mapping"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping http://dozermapper.github.io/schema/bean-mapping.xsd">
+    <mapping>
+        <class-a >com.ay.mall.pojo.Product</class-a>
+        <class-b >com.ay.mall.vo.ProductVO</class-b>
+        <field custom-converter="com.ay.mall.config.converter.DateConverter">
+            <a>createTime</a>
+            <b>createTime</b>
+        </field>
+        <field custom-converter="com.ay.mall.config.converter.DateConverter">
+            <a>updateTime</a>
+            <b>updateTime</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>com.ay.mall.pojo.Product</class-a>
+        <class-b>com.ay.mall.vo.ProductListVO</class-b>
+    </mapping>
+</mappings>

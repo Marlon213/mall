@@ -6,15 +6,11 @@ import com.ay.mall.common.ServerResponse;
 import com.ay.mall.dao.UserMapper;
 import com.ay.mall.pojo.User;
 import com.ay.mall.service.IUserService;
-import com.ay.util.MD5Util;
+import com.ay.mall.util.MD5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.print.DocFlavor;
-import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 @Service("iUserService")
