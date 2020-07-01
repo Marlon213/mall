@@ -11,6 +11,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginHandlerInteceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/user/register","/user/login","/user/valid",
-                        "/user/question","/user/check_answer","/user/forget_reset_password","/manage/user/login");
+                        "/user/question","/user/check_answer","/user/forget_reset_password","/manage/user/login"
+                ,"/cart/get_cart_product_count");
     }
 }
