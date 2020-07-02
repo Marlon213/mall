@@ -44,10 +44,6 @@ public class FTPUtil {
     }
 
     public static boolean upload(List<File> fileList) throws IOException {
-        log.info(ip);
-        log.info(user);
-        log.info(pwd);
-        log.info(remotePath);
         boolean result = uploadFile(FTPUtil.remotePath,fileList);
         log.info("FTP文件上传完成");
         return result;
