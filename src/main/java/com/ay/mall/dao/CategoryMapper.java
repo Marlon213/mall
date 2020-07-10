@@ -1,7 +1,6 @@
 package com.ay.mall.dao;
 
 import com.ay.mall.pojo.Category;
-import sun.util.resources.cldr.te.TimeZoneNames_te;
 
 import java.util.List;
 
