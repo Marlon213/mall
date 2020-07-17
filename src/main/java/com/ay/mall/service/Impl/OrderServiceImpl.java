@@ -5,14 +5,10 @@ import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.demo.trade.config.Configs;
 import com.alipay.demo.trade.model.ExtendParams;
 import com.alipay.demo.trade.model.GoodsDetail;
-import com.alipay.demo.trade.model.builder.AlipayTradePayRequestBuilder;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
-import com.alipay.demo.trade.model.result.AlipayF2FPayResult;
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayTradeService;
-import com.alipay.demo.trade.service.impl.AlipayMonitorServiceImpl;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
-import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
 import com.alipay.demo.trade.utils.ZxingUtils;
 import com.ay.mall.common.Const;
 import com.ay.mall.common.ServerResponse;
@@ -68,7 +64,7 @@ public class OrderServiceImpl implements IOrderService {
         /** 一定要在创建AlipayTradeService之前调用Configs.init()设置默认参数
          *  Configs会读取classpath下的zfbinfo.properties文件配置信息，如果找不到该文件则确认该文件是否在classpath目录
          */
-        Configs.init("zfbinfo.properties");
+        Configs.init("src/main/resources.dev/zfbinfo.properties");
 
         /** 使用Configs提供的默认参数
          *  AlipayTradeService可以使用单例或者为静态成员对象，不需要反复new
@@ -154,7 +150,7 @@ public class OrderServiceImpl implements IOrderService {
                 .setUndiscountableAmount(undiscountableAmount).setSellerId(sellerId).setBody(body)
                 .setOperatorId(operatorId).setStoreId(storeId).setExtendParams(extendParams)
                 .setTimeoutExpress(timeoutExpress)
-                .setNotifyUrl(PropertiesUtil.getProperty("zfbinfo.properties","alipay.callback.url"))//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
+                .setNotifyUrl(PropertiesUtil.getProperty("src/main/resources.dev/zfbinfo.properties","alipay.callback.url"))//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
                 .setGoodsDetailList(goodsDetailList);
 
 
@@ -185,7 +181,7 @@ public class OrderServiceImpl implements IOrderService {
                     log.error("上传二维码异常",e);
                 }
                 log.info("qrPath:" + qrPath);
-                String qrUrl = PropertiesUtil.getProperty("mall.properties","ftp.server.http.prefix")+targetFile.getName();
+                String qrUrl = PropertiesUtil.getProperty("src/main/resources.dev/mall.properties","ftp.server.http.prefix")+targetFile.getName();
                 resultMap.put("qrUrl",qrUrl);
                 return ServerResponse.createBySuccess(resultMap);
             case FAILED:
@@ -333,7 +329,7 @@ public class OrderServiceImpl implements IOrderService {
         }
         orderProductVo.setProductTotalPrice(payment);
         orderProductVo.setOrderItemVoList(orderItemVoList);
-        orderProductVo.setImageHost(PropertiesUtil.getProperty("mall.properties","ftp.server.http.prefix"));
+        orderProductVo.setImageHost(PropertiesUtil.getProperty("src/main/resources.dev/mall.properties","ftp.server.http.prefix"));
         return ServerResponse.createBySuccess(orderProductVo);
     }
     public ServerResponse<OrderVO> getOrderDetail(Integer userId,Long orderNo){
@@ -428,7 +424,7 @@ public class OrderServiceImpl implements IOrderService {
         orderVo.setCloseTime(DateTimeUtil.dateToStr(order.getCloseTime()));
 
 
-        orderVo.setImageHost(PropertiesUtil.getProperty("mall.properties","ftp.server.http.prefix"));
+        orderVo.setImageHost(PropertiesUtil.getProperty("src/main/resources.dev/mall.properties","ftp.server.http.prefix"));
 
 
         List<OrderItemVO> orderItemVoList = Lists.newArrayList();

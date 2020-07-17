@@ -7,7 +7,6 @@ import com.ay.mall.util.PropertiesUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,7 +45,7 @@ public class FileServiceImpl implements IFileService {
             log.error("文件上传tomcat服务器失败",e);
         }
         Map<String,String> map = Maps.newHashMap();
-        String url = PropertiesUtil.getProperty("mall.properties","ftp.server.http.prefix")+FTPUtil.getRemotePath()+targetFile.getName();
+        String url = PropertiesUtil.getProperty("src/main/resources.dev/mall.properties","ftp.server.http.prefix")+FTPUtil.getRemotePath()+targetFile.getName();
         map.put("uri",targetFile.getName());
         map.put("url",url);
         return ServerResponse.createBySuccess(map);

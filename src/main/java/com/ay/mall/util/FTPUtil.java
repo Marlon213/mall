@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 @Slf4j
 @Component
-@PropertySource(value = {"classpath:mall.properties"})
+@PropertySource(value = {"classpath:src/main/resources.dev/mall.properties"})
 public class FTPUtil {
 
 

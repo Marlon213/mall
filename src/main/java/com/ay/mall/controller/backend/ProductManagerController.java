@@ -6,9 +6,7 @@ import com.ay.mall.pojo.Product;
 import com.ay.mall.pojo.User;
 import com.ay.mall.service.IFileService;
 import com.ay.mall.service.IProductService;
-import com.ay.mall.util.FTPUtil;
 import com.ay.mall.util.PropertiesUtil;
-import com.ay.mall.vo.ProductListVO;
 import com.ay.mall.vo.ProductVO;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
@@ -21,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -112,7 +109,7 @@ public class ProductManagerController {
                 resultMap.put("msg", "上传失败");
                 return resultMap;
             }
-            String url = PropertiesUtil.getProperty("mall.properties", "ftp.server.http.prefix") + targetFileName;
+            String url = PropertiesUtil.getProperty("src/main/resources.dev/mall.properties", "ftp.server.http.prefix") + targetFileName;
             resultMap.put("success", true);
             resultMap.put("msg", "上传成功");
             resultMap.put("file_path", url);
