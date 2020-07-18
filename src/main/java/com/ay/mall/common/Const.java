@@ -6,6 +6,12 @@ import java.util.Set;
 
 public class Const {
 
+    public static final String TOKEN_PREFIX="token_";
+
+    public interface RedisCacheExtime{
+        int REDIS_SESSION_EXTIME = 60 * 30;//30分钟
+    }
+
     public static final String CURRENT_USER = "currentUser";
 
     //一个类型的，枚举过于厚重

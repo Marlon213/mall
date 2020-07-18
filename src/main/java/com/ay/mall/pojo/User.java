@@ -2,8 +2,9 @@ package com.ay.mall.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Date;
-public class User {
+public class User implements Serializable {
     private Integer id;
 
     private String username;

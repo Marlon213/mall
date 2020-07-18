@@ -181,7 +181,7 @@ public class OrderServiceImpl implements IOrderService {
                     log.error("上传二维码异常",e);
                 }
                 log.info("qrPath:" + qrPath);
-                String qrUrl = PropertiesUtil.getProperty("src/main/resources.dev/mall.properties","ftp.server.http.prefix")+targetFile.getName();
+                String qrUrl = PropertiesUtil.getProperty("mall.properties","ftp.server.http.prefix")+targetFile.getName();
                 resultMap.put("qrUrl",qrUrl);
                 return ServerResponse.createBySuccess(resultMap);
             case FAILED:
@@ -329,7 +329,7 @@ public class OrderServiceImpl implements IOrderService {
         }
         orderProductVo.setProductTotalPrice(payment);
         orderProductVo.setOrderItemVoList(orderItemVoList);
-        orderProductVo.setImageHost(PropertiesUtil.getProperty("src/main/resources.dev/mall.properties","ftp.server.http.prefix"));
+        orderProductVo.setImageHost(PropertiesUtil.getProperty("mall.properties","ftp.server.http.prefix"));
         return ServerResponse.createBySuccess(orderProductVo);
     }
     public ServerResponse<OrderVO> getOrderDetail(Integer userId,Long orderNo){
@@ -424,7 +424,7 @@ public class OrderServiceImpl implements IOrderService {
         orderVo.setCloseTime(DateTimeUtil.dateToStr(order.getCloseTime()));
 
 
-        orderVo.setImageHost(PropertiesUtil.getProperty("src/main/resources.dev/mall.properties","ftp.server.http.prefix"));
+        orderVo.setImageHost(PropertiesUtil.getProperty("mall.properties","ftp.server.http.prefix"));
 
 
         List<OrderItemVO> orderItemVoList = Lists.newArrayList();

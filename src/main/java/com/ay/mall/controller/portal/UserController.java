@@ -5,11 +5,17 @@ import com.ay.mall.common.ResponseCode;
 import com.ay.mall.common.ServerResponse;
 import com.ay.mall.pojo.User;
 import com.ay.mall.service.IUserService;
+import com.ay.mall.util.CookieUtil;
+import com.ay.mall.util.JSONUtil;
+import com.ay.mall.util.RedisShardedPoolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -19,17 +25,22 @@ public class UserController {
     private IUserService iUserService;
 
     @RequestMapping(value = "login",method = RequestMethod.POST)
-    public ServerResponse<User> login(String username, String password, HttpSession session){
+    public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletResponse httpResponse){
         ServerResponse<User> response =  iUserService.login(username, password);
         if (response.isSuccess()){
-            session.setAttribute(Const.CURRENT_USER,response.getData());
+//            session.setAttribute(Const.CURRENT_USER,response.getData());
+            RedisShardedPoolUtil.set(session.getId(), JSONUtil.obj2String(response.getData()));
+            CookieUtil.writeLoginToken(httpResponse,session.getId());
         }
         return response;
     }
 
     @RequestMapping(value = "logout",method = RequestMethod.GET)
-    public ServerResponse<String> logout(HttpSession session){
-        session.removeAttribute(Const.CURRENT_USER);
+    public ServerResponse<String> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+//        session.removeAttribute(Const.CURRENT_USER);
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        CookieUtil.delLoginToken(httpServletRequest,httpServletResponse);
+        RedisShardedPoolUtil.del(loginToken);
         return ServerResponse.createBySuccess("退出成功");
     }
 
@@ -45,12 +56,7 @@ public class UserController {
 
     @RequestMapping(value = "information",method = RequestMethod.GET)
     public ServerResponse<User> getInformation(HttpSession session){
-
         User user = (User) session.getAttribute(Const.CURRENT_USER);
-        //拦截器
-//        if (user==null){
-//            return ServerResponse.createByErrorMessage("获取信息失败");
-//        }
         return ServerResponse.createBySuccess(user);
     }
 

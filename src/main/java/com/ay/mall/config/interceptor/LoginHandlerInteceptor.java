@@ -3,7 +3,12 @@ package com.ay.mall.config.interceptor;
 
 import com.ay.mall.common.Const;
 import com.ay.mall.common.ServerResponse;
+import com.ay.mall.pojo.User;
+import com.ay.mall.util.CookieUtil;
+import com.ay.mall.util.JSONUtil;
+import com.ay.mall.util.RedisShardedPoolUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -20,8 +25,16 @@ public class LoginHandlerInteceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Object user = request.getSession().getAttribute(Const.CURRENT_USER);
-        if (user==null){
+        boolean result = true;
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            result=false;
+        }else{
+            String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+            User user = JSONUtil.string2Obj(userJsonStr, User.class);
+            if (user==null) result=false;
+        }
+        if (!result){
             //重置response
             response.reset();
             //设置编码格式

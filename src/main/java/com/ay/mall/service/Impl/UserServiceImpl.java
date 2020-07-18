@@ -2,11 +2,13 @@ package com.ay.mall.service.Impl;
 
 import com.ay.mall.common.CacheToken;
 import com.ay.mall.common.Const;
+import com.ay.mall.common.RedisShardedPool;
 import com.ay.mall.common.ServerResponse;
 import com.ay.mall.dao.UserMapper;
 import com.ay.mall.pojo.User;
 import com.ay.mall.service.IUserService;
 import com.ay.mall.util.MD5Util;
+import com.ay.mall.util.RedisShardedPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,7 +86,8 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("答案错误");
         }
         String token = UUID.randomUUID().toString();
-        CacheToken.setKey(CacheToken.TOKEN_PREFIX+username,token);
+       // CacheToken.setKey(CacheToken.TOKEN_PREFIX+username,token);
+        RedisShardedPoolUtil.setEx(Const.TOKEN_PREFIX+username,token,60*60*12);
         return ServerResponse.createBySuccess(token);
     }
 
@@ -95,7 +98,8 @@ public class UserServiceImpl implements IUserService {
         if (StringUtils.isBlank(token)){
             return ServerResponse.createByErrorMessage("token不能为空");
         }
-        String cacheToken = CacheToken.getKey(CacheToken.TOKEN_PREFIX+username);
+      //  String cacheToken = CacheToken.getKey(CacheToken.TOKEN_PREFIX+username);
+        String cacheToken = RedisShardedPoolUtil.get(Const.TOKEN_PREFIX+username);
         if (StringUtils.isBlank(cacheToken)){
             return ServerResponse.createByErrorMessage("token已过期");
         }
