@@ -25,26 +25,24 @@ public class LoginHandlerInteceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        boolean result = true;
+        log.info("********LoginHandlerInteceptor****************");
+
+        User user = null;
+
         String loginToken = CookieUtil.readLoginToken(request);
-        if (StringUtils.isEmpty(loginToken)){
-            result=false;
-        }else{
+        if(StringUtils.isNotEmpty(loginToken)){
             String userJsonStr = RedisShardedPoolUtil.get(loginToken);
-            User user = JSONUtil.string2Obj(userJsonStr, User.class);
-            if (user==null) result=false;
+            user = JSONUtil.string2Obj(userJsonStr,User.class);
         }
-        if (!result){
+
+        if (user==null){
             //重置response
             response.reset();
             //设置编码格式
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json;charset=UTF-8");
             PrintWriter pw = response.getWriter();
-            ObjectMapper mapper=new ObjectMapper();
-            String str = mapper.writeValueAsString(
-                     ServerResponse.createByErrorMessage("请返回登录页面"));
-            pw.write(str);
+            pw.print(JSONUtil.obj2String(ServerResponse.createByErrorMessage("拦截器拦截,用户未登录")));
             pw.flush();
             pw.close();
             return false;

@@ -18,12 +18,13 @@ public class ProductController {
     private IProductService iProductService;
 
 
-
+// @RequestMapping(value = "/{productId}", method = RequestMethod.GET)  restful
     @RequestMapping("detail")
     public ServerResponse<ProductVO> detail(Integer productId){
         return iProductService.getProductDetail(productId);
     }
-
+//    @RequestMapping(value = "/{keyword}/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+//对于默认的
     @RequestMapping("list")
     public ServerResponse<PageInfo> list(@RequestParam(value = "keyword",required = false)String keyword,
                                          @RequestParam(value = "categoryId",required = false)Integer categoryId,

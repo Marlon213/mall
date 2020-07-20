@@ -23,37 +23,21 @@ public class CategoryManagerController {
 
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public ServerResponse<String> addCategory(@RequestParam(defaultValue = "0") Integer parentId, String categoryName, HttpSession session){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser.getRole()!=Const.Role.ROLE_ADMIN){
-            return ServerResponse.createByErrorMessage("非管理员不能操作");
-        }
         return iCategoryService.addCategory(parentId, categoryName);
     }
 
     @RequestMapping(value = "update_name",method = RequestMethod.PUT)
     public ServerResponse<String> updateName(HttpSession session,String categoryName,Integer categoryId){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser.getRole()!=Const.Role.ROLE_ADMIN){
-            return ServerResponse.createByErrorMessage("非管理员不能操作");
-        }
         return iCategoryService.updateName(categoryId,categoryName);
     }
 
     @RequestMapping(value = "get_category",method = RequestMethod.GET)
     public ServerResponse<List<Category>> getCategory(HttpSession session,@RequestParam(defaultValue = "0") Integer categoryId){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser.getRole()!=Const.Role.ROLE_ADMIN){
-            return ServerResponse.createByErrorMessage("非管理员不能操作");
-        }
         return iCategoryService.getCategory(categoryId);
     }
 
     @RequestMapping(value = "get_deep_category",method = RequestMethod.GET)
     public ServerResponse<List<Integer>> getCategoryAndDeepChildrenCategory(HttpSession session,@RequestParam(defaultValue = "0") Integer categoryId){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser.getRole()!=Const.Role.ROLE_ADMIN){
-            return ServerResponse.createByErrorMessage("非管理员不能操作");
-        }
         return iCategoryService.getCategoryAndDeepChildrenCategory(categoryId);
     }
 }

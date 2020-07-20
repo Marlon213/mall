@@ -8,6 +8,9 @@ import com.ay.mall.common.ResponseCode;
 import com.ay.mall.common.ServerResponse;
 import com.ay.mall.pojo.User;
 import com.ay.mall.service.IOrderService;
+import com.ay.mall.util.CookieUtil;
+import com.ay.mall.util.JSONUtil;
+import com.ay.mall.util.RedisShardedPoolUtil;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,40 +31,52 @@ public class OrderController {
     private IOrderService iOrderService;
 
     @RequestMapping("create")
-    public ServerResponse create(HttpSession session, Integer shippingId){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse create(HttpServletRequest httpServletRequest, Integer shippingId){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
         return iOrderService.createOrder(user.getId(),shippingId);
     }
 
     @RequestMapping("cancel")
-    public ServerResponse cancel(HttpSession session, Long orderNo){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse cancel(HttpServletRequest httpServletRequest, Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
         return iOrderService.cancel(user.getId(),orderNo);
     }
 
     @RequestMapping("get_order_cart_product")
-    public ServerResponse getOrderCartProduct(HttpSession session){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse getOrderCartProduct(HttpServletRequest httpServletRequest){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
         return iOrderService.getOrderCartProduct(user.getId());
     }
 
     @RequestMapping("detail")
-    public ServerResponse detail(HttpSession session,Long orderNo){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse detail(HttpServletRequest httpServletRequest,Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
         return iOrderService.getOrderDetail(user.getId(),orderNo);
     }
 
     @RequestMapping("list")
-    public ServerResponse list(HttpSession session, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse list(HttpServletRequest httpServletRequest, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
         return iOrderService.getOrderList(user.getId(),pageNum,pageSize);
     }
 
 
 
     @RequestMapping("pay")
-    public ServerResponse pay(HttpSession session, Long orderNo, HttpServletRequest request){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse pay(HttpServletRequest httpServletRequest, Long orderNo, HttpServletRequest request){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
         String path = request.getSession().getServletContext().getRealPath("upload");
         return iOrderService.pay(orderNo,user.getId(),path);
     }
@@ -102,8 +117,10 @@ public class OrderController {
     }
 
     @RequestMapping("query_order_pay_status")
-    public ServerResponse<Boolean> queryOrderPayStatus(HttpSession session, Long orderNo){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<Boolean> queryOrderPayStatus(HttpServletRequest httpServletRequest, Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
 
         ServerResponse serverResponse = iOrderService.queryOrderPayStatus(user.getId(),orderNo);
         if(serverResponse.isSuccess()){

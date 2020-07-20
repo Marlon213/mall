@@ -55,8 +55,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "information",method = RequestMethod.GET)
-    public ServerResponse<User> getInformation(HttpSession session){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<User> getInformation(HttpServletRequest httpServletRequest){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
         return ServerResponse.createBySuccess(user);
     }
 
@@ -76,26 +78,35 @@ public class UserController {
     }
 
     @RequestMapping(value = "reset_password",method = RequestMethod.POST)
-    public ServerResponse<String> resetPassword(String oldPassword,String newPassword,HttpSession session){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<String> resetPassword(String oldPassword,String newPassword,HttpServletRequest httpServletRequest){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User user = JSONUtil.string2Obj(userJsonStr,User.class);
         return iUserService.resetPassword(oldPassword,newPassword,user);
     }
 
     @RequestMapping(value = "update_information",method = RequestMethod.POST)
-    public ServerResponse<User> updateInformation(User user,HttpSession session){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<User> updateInformation(User user,HttpServletRequest httpServletRequest){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User currentUser = JSONUtil.string2Obj(userJsonStr,User.class);
         user.setId(currentUser.getId());
         ServerResponse<User> response = iUserService.updateInformation(user);
         if (response.isSuccess()){
             response.getData().setUsername(currentUser.getUsername());
-            session.setAttribute(Const.CURRENT_USER,response.getData());
+
+
+            RedisShardedPoolUtil.set(loginToken, JSONUtil.obj2String(response.getData()));
+          //  session.setAttribute(Const.CURRENT_USER,response.getData());
         }
         return response;
     }
 
     @RequestMapping(value = "get_information",method = RequestMethod.GET)
-    public ServerResponse<User> get_information(HttpSession session){
-        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<User> get_information(HttpServletRequest httpServletRequest){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String userJsonStr = RedisShardedPoolUtil.get(loginToken);
+        User currentUser = JSONUtil.string2Obj(userJsonStr,User.class);
         return iUserService.getInformation(currentUser.getId());
     }
 }

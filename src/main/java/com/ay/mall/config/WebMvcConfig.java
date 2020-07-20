@@ -1,5 +1,6 @@
 package com.ay.mall.config;
 
+import com.ay.mall.config.interceptor.AuthorityInterceptor;
 import com.ay.mall.config.interceptor.LoginHandlerInteceptor;
 import com.ay.mall.controller.common.SessionExpireFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginHandlerInteceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/user/register","/user/login","/user/valid",
-                        "/user/question","/user/check_answer","/user/forget_reset_password","/manage/user/login"
+                        "/user/question","/user/check_answer","/user/forget_reset_password","/manage/**"
                 ,"/cart/get_cart_product_count");
+        registry.addInterceptor(new AuthorityInterceptor()).addPathPatterns("/manage/**")
+                .excludePathPatterns("/manage/user/login");
     }
 
 
